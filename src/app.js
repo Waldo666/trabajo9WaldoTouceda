@@ -15,6 +15,7 @@ const productsRouter = require("./routes/products.router.js");
 const cartsRouter = require("./routes/carts.router.js");
 const viewsRouter = require("./routes/views.router.js");
 
+
 //Middleware
 app.use(express.static("./src/public"));
 app.use(express.json());
@@ -29,29 +30,27 @@ app.use(session({
     })
 }))
 
+//Passport 
+app.use(cookieParser());
+app.use(passport.initialize());
+initializePassport();
+
 //Handlebars
 app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");
 app.set("views", "./src/views");
 
 
-
-//Cambios passport: 
-initializePassport();
-app.use(passport.initialize());
-app.use(passport.session());
-
 //Rutas: 
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use("/api/users", userRouter);
 app.use("/", viewsRouter);
 
-const httpServer = app.listen(PUERTO, () => {
-    console.log(`Srv escuchando en el puerto ${PUERTO}`);
+app.listen(PUERTO, () => {
+    console.log(`Servidor escuchando en el puerto ${PUERTO}`);
 });
 
 app.use("/api/users", userRouter);
 app.use("/api/sessions", sessionRouter);
 app.use("/", viewsRouter);
-
-

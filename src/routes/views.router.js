@@ -1,11 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const ProductManager = require("../controllers/product-manager.db.js");
-const CartManager = require("../controllers/cart-manager.db.js");
+const ProductManager = require("../controllers/product-manager-db.js");
+const CartManager = require("../controllers/cart.controller.js");
 const productManager = new ProductManager();
 const cartManager = new CartManager();
-
-
 
 router.get("/products", async (req, res) => {
    try {
@@ -20,6 +18,7 @@ router.get("/products", async (req, res) => {
          return rest;
       });
 
+      
       res.render("products", {
          productos: nuevoArray,
          hasPrevPage: productos.hasPrevPage,
@@ -53,6 +52,7 @@ router.get("/carts/:cid", async (req, res) => {
       const productosEnCarrito = carrito.products.map(item => ({
          product: item.product.toObject(),
          
+         
          quantity: item.quantity
       }));
 
@@ -64,30 +64,16 @@ router.get("/carts/:cid", async (req, res) => {
    }
 });
 
-// Ruta para el formulario de login
+
+//Login
+
 router.get("/login", (req, res) => {
-   if (req.session.login) {
-       return res.redirect("/profile");
-   }
    res.render("login");
 });
 
-// Ruta para el formulario de registro
 router.get("/register", (req, res) => {
-   if (req.session.login) {
-       return res.redirect("/profile");
-   }
    res.render("register");
 });
 
-// Ruta para la vista de perfil
-router.get("/profile", (req, res) => {
-   if (!req.session.login) {
-       return res.redirect("/login");
-   }
-   res.render("profile", { user: req.session.user });
-});
-
-module.exports = router;
 
 module.exports = router; 
